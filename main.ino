@@ -1,5 +1,13 @@
+#include <Servo.h>
 
 const int ledPin = 3;
+
+// SERVO
+Servo Serwo;
+
+const int ServoPin = 9;
+int initSerwoPos = 0;
+int currentSerwoPos = 0;
 
 // ENGINES
 const int AOutPin1 = A5;
@@ -21,6 +29,11 @@ void moveBWD();
 void setup() {
   pinMode(ledPin, OUTPUT);
 
+  // Servo
+  Serwo.attach(9);
+
+  
+  // Engines
   pinMode(APwmPin, OUTPUT);
   pinMode(AOutPin1, OUTPUT);
   pinMode(AOutPin2, OUTPUT);
@@ -34,16 +47,14 @@ void loop() {
 
   delay(2000);
 
+  // 98 - middle
 
-  // digitalWrite(ledPin, LOW);
+  Serwo.write(2);
 
-  // moveFWD();
-
-  // delay(2000);
-
-  // moveBWD();
-
-  // delay(2000);
+  delay(2000);
+  Serwo.write(89);
+  delay(2000);
+  Serwo.write(178);
 }
 
 
@@ -69,4 +80,3 @@ void moveBWD() {
   digitalWrite(BOutPin1, HIGH);
   digitalWrite(BOutPin2, LOW);
 }
-
