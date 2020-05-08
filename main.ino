@@ -75,13 +75,15 @@ void loop() {
 
   
 
+  
+
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Engines Control
 void moveFWD() {
-  digitalWrite(APwmPin, 200);
-  digitalWrite(BPwmPin, 200);
+  analogWrite(APwmPin, 50);
+  analogWrite(BPwmPin, 50);
 
   digitalWrite(AOutPin1, HIGH);
   digitalWrite(AOutPin2, LOW);
@@ -90,8 +92,8 @@ void moveFWD() {
 }
 //-------------------------------------------------------------------------------------------------------------------------
 void moveBWD() {
-  digitalWrite(APwmPin, HIGH);
-  digitalWrite(BPwmPin, HIGH);
+  analogWrite(APwmPin, 50);
+  analogWrite(BPwmPin, 50);
 
   digitalWrite(AOutPin1, LOW);
   digitalWrite(AOutPin2, HIGH);
@@ -101,8 +103,8 @@ void moveBWD() {
 
 //-------------------------------------------------------------------------------------------------------------------------
 void stopMotors() {
-  digitalWrite(APwmPin, HIGH);
-  digitalWrite(BPwmPin, HIGH);
+  analogWrite(APwmPin, 50);
+  analogWrite(BPwmPin, 50);
 
   digitalWrite(AOutPin1, LOW);
   digitalWrite(AOutPin2, LOW);
