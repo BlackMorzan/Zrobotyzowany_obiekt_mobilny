@@ -2,6 +2,10 @@
 
 const int ledPin = 3;
 
+// Ultrasocnic sesor
+const int HCTrigPin = 11;
+const int HCEchoPin = 10;
+
 // SERVO
 Servo Serwo;
 
@@ -19,6 +23,9 @@ const int BOutPin2 = 12;
 const int BPwmPin = 6;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Ultrasonic sensor control
+int getDistance();
+
 // Engines control
 void moveFWD();
 void moveBWD();
@@ -28,6 +35,12 @@ void moveBWD();
 
 void setup() {
   pinMode(ledPin, OUTPUT);
+  Serial.begin(9600);
+
+  // Ultrasonic sensor
+  pinMode(HCTrigPin, OUTPUT);
+  pinMode(HCEchoPin, INPUT); 
+  
 
   // Servo
   Serwo.attach(9);
@@ -44,17 +57,18 @@ void setup() {
 }
 
 void loop() {
-
-  delay(2000);
-
-  // 98 - middle
-
-  Serwo.write(2);
-
-  delay(2000);
+  int dist;
+  dist = getDistance();
+  Serial.println(dist);
+  
+  moveFWD();
+  delay(1000);
   Serwo.write(89);
-  delay(2000);
+  delay(1000);
+  Serwo.write(2);
+  delay(1000);
   Serwo.write(178);
+  delay(1000);
 }
 
 
@@ -79,4 +93,21 @@ void moveBWD() {
   digitalWrite(AOutPin2, HIGH);
   digitalWrite(BOutPin1, HIGH);
   digitalWrite(BOutPin2, LOW);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Ultrasonic sensor
+int getDistance(){
+  long time_p, distance;
+ 
+  digitalWrite(HCTrigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(HCTrigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(HCTrigPin, LOW);
+ 
+  time_p = pulseIn(HCEchoPin, HIGH);
+  distance = time_p / 58;
+
+  return distance;
 }
