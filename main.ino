@@ -25,10 +25,14 @@ const int BPwmPin = 6;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Ultrasonic sensor control
 int getDistance();
+int detectObstacle();
 
 // Engines control
 void moveFWD();
 void moveBWD();
+void moveLeft();
+void moveRight();
+void turnAround();
 void stopMotors();
 
 
@@ -67,23 +71,45 @@ void loop() {
 
   delay(2000);
 
-  while (getDistance() > 20) {
-    //moveFWD();
+  while (1) {
+
+    while (getDistance() > 20) {
+      moveFWD();
+    }
+
+    stopMotors();
+    Serwo.write(2);
+    delay(1000);
+    if(getDistance() < 20){
+      Serwo.write(178);
+      delay(1000);
+      if(getDistance() < 20){
+        turnAround();
+      }
+      else{
+        moveLeft();
+      }
+    }
+    else{
+      moveRight();
+    }
+    stopMotors();
+    delay(1000);
+
+    Serwo.write(89);
+    delay(1000);
+    
+
+    
+
   }
-  //stopMotors();
-  delay(2000);
-
-  
-
-  
-
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Engines Control
 void moveFWD() {
-  analogWrite(APwmPin, 50);
-  analogWrite(BPwmPin, 50);
+  analogWrite(APwmPin, 100);
+  analogWrite(BPwmPin, 100);
 
   digitalWrite(AOutPin1, HIGH);
   digitalWrite(AOutPin2, LOW);
@@ -92,14 +118,52 @@ void moveFWD() {
 }
 //-------------------------------------------------------------------------------------------------------------------------
 void moveBWD() {
-  analogWrite(APwmPin, 50);
-  analogWrite(BPwmPin, 50);
+  analogWrite(APwmPin, 100);
+  analogWrite(BPwmPin, 100);
 
   digitalWrite(AOutPin1, LOW);
   digitalWrite(AOutPin2, HIGH);
   digitalWrite(BOutPin1, HIGH);
   digitalWrite(BOutPin2, LOW);
 }
+
+//-------------------------------------------------------------------------------------------------------------------------
+void moveLeft(){
+  analogWrite(APwmPin, 100);
+  analogWrite(BPwmPin, 100);
+
+  digitalWrite(AOutPin1, LOW);
+  digitalWrite(AOutPin2, HIGH);
+  digitalWrite(BOutPin1, LOW);
+  digitalWrite(BOutPin2, HIGH);
+
+  delay(400);
+}
+
+void moveRight(){
+  analogWrite(APwmPin, 100);
+  analogWrite(BPwmPin, 100);
+
+  digitalWrite(AOutPin1, HIGH);
+  digitalWrite(AOutPin2, LOW);
+  digitalWrite(BOutPin1, HIGH);
+  digitalWrite(BOutPin2, LOW);
+
+  delay(400);
+}
+
+
+void turnAround(){
+  analogWrite(APwmPin, 100);
+  analogWrite(BPwmPin, 100);
+
+  digitalWrite(AOutPin1, HIGH);
+  digitalWrite(AOutPin2, LOW);
+  digitalWrite(BOutPin1, HIGH);
+  digitalWrite(BOutPin2, LOW);
+
+  delay(1000);
+} 
 
 //-------------------------------------------------------------------------------------------------------------------------
 void stopMotors() {
@@ -128,4 +192,32 @@ int getDistance() {
   distance = time_p / 58;
 
   return distance;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+int detectObstacle() {
+  Serwo.write(2);
+  if (getDistance() < 20) {
+    delay(200);
+    Serwo.write(89);
+    return 1;
+  }
+  else {
+    delay(200);
+    Serwo.write(89);
+  }
+
+  Serwo.write(178);
+  if (getDistance() < 20) {
+    delay(200);
+    Serwo.write(89);
+    return 2;
+  }
+  else {
+    delay(200);
+    Serwo.write(89);
+  }
+
+  return -1;
 }
