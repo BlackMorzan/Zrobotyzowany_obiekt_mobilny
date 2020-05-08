@@ -29,6 +29,7 @@ int getDistance();
 // Engines control
 void moveFWD();
 void moveBWD();
+void stopMotors();
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -39,13 +40,13 @@ void setup() {
 
   // Ultrasonic sensor
   pinMode(HCTrigPin, OUTPUT);
-  pinMode(HCEchoPin, INPUT); 
-  
+  pinMode(HCEchoPin, INPUT);
+
 
   // Servo
   Serwo.attach(9);
 
-  
+
   // Engines
   pinMode(APwmPin, OUTPUT);
   pinMode(AOutPin1, OUTPUT);
@@ -57,27 +58,30 @@ void setup() {
 }
 
 void loop() {
-  int dist;
-  dist = getDistance();
-  Serial.println(dist);
+  while (getDistance() > 20) {
+    digitalWrite(ledPin, HIGH);
+    delay(500);
+    digitalWrite(ledPin, LOW);
+    delay(500);
+  }
+
+  delay(2000);
+
+  while (getDistance() > 20) {
+    //moveFWD();
+  }
+  //stopMotors();
+  delay(2000);
+
   
-  moveFWD();
-  delay(1000);
-  Serwo.write(89);
-  delay(1000);
-  Serwo.write(2);
-  delay(1000);
-  Serwo.write(178);
-  delay(1000);
+
 }
-
-
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Engines Control
 void moveFWD() {
-  digitalWrite(APwmPin, HIGH);
-  digitalWrite(BPwmPin, HIGH);
+  digitalWrite(APwmPin, 200);
+  digitalWrite(BPwmPin, 200);
 
   digitalWrite(AOutPin1, HIGH);
   digitalWrite(AOutPin2, LOW);
@@ -95,17 +99,29 @@ void moveBWD() {
   digitalWrite(BOutPin2, LOW);
 }
 
+//-------------------------------------------------------------------------------------------------------------------------
+void stopMotors() {
+  digitalWrite(APwmPin, HIGH);
+  digitalWrite(BPwmPin, HIGH);
+
+  digitalWrite(AOutPin1, LOW);
+  digitalWrite(AOutPin2, LOW);
+  digitalWrite(BOutPin1, LOW);
+  digitalWrite(BOutPin2, LOW);
+}
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Ultrasonic sensor
-int getDistance(){
+int getDistance() {
   long time_p, distance;
- 
+
   digitalWrite(HCTrigPin, LOW);
   delayMicroseconds(2);
   digitalWrite(HCTrigPin, HIGH);
   delayMicroseconds(10);
   digitalWrite(HCTrigPin, LOW);
- 
+
   time_p = pulseIn(HCEchoPin, HIGH);
   distance = time_p / 58;
 
