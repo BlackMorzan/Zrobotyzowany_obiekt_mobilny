@@ -2,8 +2,14 @@
 
 const int ledPin = 3;
 
-// ENCODERS
+// ENCODERS INPUTS
+const int ECLeftA = 7;
+const int ECLeftB = 8;
+const int ECRightA = A3;
+const int ECRightB = A0;
 
+int leftEngineCount = 0;
+int rightEngineCount = 0;
 
 // Ultrasocnic sesor
 const int HCTrigPin = 11;
@@ -38,6 +44,9 @@ void moveRight();
 void turnAround();
 void stopMotors();
 
+// Encoders control
+void countLeftEngine();
+void countRightEngine();
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -62,6 +71,16 @@ void setup() {
   pinMode(BPwmPin, OUTPUT);
   pinMode(BOutPin1, OUTPUT);
   pinMode(BOutPin2, OUTPUT);
+
+  // ENCODERS:
+  pinMode(ECLeftA, INPUT);
+  pinMode(ECLeftB, INPUT);
+  pinMode(ECRightA, INPUT);
+  pinMode(ECRightB, INPUT);
+
+  // Interrupts
+  attachInterrupt(digitalPinToInterrupt(ECLeftA), countLeftEngine, RISING);
+  attachInterrupt(digitalPinToInterrupt(ECRightA), countRightEngine, RISING);
 }
 
 void loop() {
@@ -108,6 +127,28 @@ void loop() {
   }
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Encoders control
+void countLeftEngine(){
+  if(digitalRead(ECLeftB)){
+    leftEngineCount++;
+  }
+  else{
+    leftEngineCount--;
+  }
+}
+
+void countRightEngine(){
+  if(digitalRead(ECRightB)){
+    rightEngineCount++;
+  }
+  else{
+    rightEngineCount--;
+  }
+}
+
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Engines Control
 void moveFWD() {
