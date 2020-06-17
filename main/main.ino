@@ -127,10 +127,12 @@ void loop() {
     if(obstacleSide == 'r'){
       moveLeft();
       Serwo.write(178);
+      delay(200);
     }
     else if(obstacleSide == 'l'){ // Jesli po lewej -> Obrot w prawo i ustawienie czujnika w lewo
       moveRight();
       Serwo.write(2);
+      delay(200);
     }
 
 
@@ -144,8 +146,9 @@ void loop() {
 
     // Gdy przeszkoda sie skonczy: wyrownanie serwa, odczekanie 300ms, wylaczenie silnikow
     Serwo.write(89);
-    delay(300);
+    delay(100);
     stopMotors();
+    delay(5000);
 
     
     // Powrot na prosta droge, obok przeszkody
@@ -158,16 +161,21 @@ void loop() {
       Serwo.write(178);
     }
 
+    delay(1000);
+
     // Jazda do przodu wzdluz przeszkody
-    while (getDistance() > 20) {
+    while (getDistance() < 20) {
       moveFWD();
     }
+
+    delay(500);
 
     // Przeszkoda sie skonczyla
     // Gdy przeszkoda sie skonczy: wyrownanie serwa, odczekanie 300ms, wylaczenie silnikow
     Serwo.write(89);
     delay(300);
     stopMotors();
+    delay(2000);
 
     //Obrot, wjazd za prszeszkode
     if(obstacleSide == 'l'){
@@ -178,6 +186,8 @@ void loop() {
       moveRight();
       Serwo.write(178);
     }
+    delay(500);
+
 
     // Jazda do przod, tyle czasu ile wczesniej przy omijaniu preszkody
     while(distance >= 0){
@@ -185,13 +195,15 @@ void loop() {
       moveFWD;
     }
 
+    stopMotors();
+
     // Dojazd na ta sama sciezke
     // Obrot by jechac w tej samej linii
-    if(obstacleSide == 'r'){
+    if(obstacleSide == 'l'){
       moveLeft();
       Serwo.write(2);
     }
-    else if(obstacleSide == 'l'){
+    else if(obstacleSide == 'r'){
       moveRight();
       Serwo.write(178);
       }
@@ -248,8 +260,8 @@ void moveFWD() {
 
   digitalWrite(AOutPin1, LOW);
   digitalWrite(AOutPin2, HIGH);
-  digitalWrite(BOutPin1, HIGH);
-  digitalWrite(BOutPin2, LOW);
+  digitalWrite(BOutPin1, LOW);
+  digitalWrite(BOutPin2, HIGH);
 }
 //-------------------------------------------------------------------------------------------------------------------------
 void moveBWD() {
@@ -258,8 +270,8 @@ void moveBWD() {
 
   digitalWrite(AOutPin1, HIGH);
   digitalWrite(AOutPin2, LOW);
-  digitalWrite(BOutPin1, LOW);
-  digitalWrite(BOutPin2, HIGH);
+  digitalWrite(BOutPin1, HIGH);
+  digitalWrite(BOutPin2,  LOW);
 }
 
 //-------------------------------------------------------------------------------------------------------------------------
